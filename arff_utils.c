@@ -102,9 +102,20 @@ void process_unquoted_attribute(char *line)
    printf("STR1: %s\n\n", str1);
 
    tok = strtok(str1, ",");
+   tok += 1;
    printf("TOK: %s\n\n", tok);
    while ( (tok = strtok(NULL, ",")) )
+   {
+      /* walk through to find last } and change to 0. */
+      char *tmp;
+      tmp = tok;
+      while ( *tmp != '\n')
+         tmp += 1;
+      tmp = tmp - 1;
+      *tmp = 0;
+
       printf("TOK: %s\n\n", tok);
+   }
 }
 
 void process_quoted_attribute(char *line)
