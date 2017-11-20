@@ -1,30 +1,78 @@
 #include <stdio.h>
+#include <string.h>
 
-#define MAXLINE 5000
+#define MAXLINE 8192
+
+
+/****************************************
+ * http://weka.wikispaces.com/ARFF+%28book+version%29
+ *
+ *
+ */
+
+/* We use fscanf, from stdio.h, which is formatted data input.
+ * Page 162 of Advanced Programming in the UNIX Environment, 3rd.
+ * * Any line that begins with % is a comment.  * The @relation, @attribute, and @data are case insensitive.
+ *
+ * ARFF Header Section
+ * Example Attribute Line: 
+ * @attribute NumberOfAdults {0,1,2,'3 or more'}
+ *
+ * ARFF Data Section
+ *
+ */
 
 int main()
 {
    char line[MAXLINE];
+   memset(line, 0, sizeof(line));
    FILE *fp;
-   int c;
-   int i;
-
-   i = 0;
-
-   if ((fp = fopen("data/hello", "r")) == NULL)
+   int count = 0;
+   
+   if ((fp = fopen("/home/krw/data/training_subsetD.arff", "r")) == NULL)
    {
       printf("error opening file!\n");
       return 1;
    }
    else
    {
+      /* While there are lines in the file. */
+      while (fgets(line, MAXLINE, fp) != NULL)
+      {
+         /* If line is an attribute. */
+         if ( strncmp("@attribute", line, 10) == 0 )
+         {
+            printf("\n\nFOUND ATTRIBUTE!\n");
+            printf("%s", line);
+         }
+         /* Else if has more than 20 chars, then data line. */
+         else if ( strlen(line) > 20 )
+         {
+            count++;
+         }
+      }
+
+      printf("data lines: %d\n", count);
+      
+/*
       while (( c = getc(fp)) != EOF && i < MAXLINE)
       {
          line[i] = c;
          i++;
+         if ( c == '\n' )
+         {
+            if ( strncmp(attr_str, line, 10) == 0 )
+            {
+               printf("\n\nFOUND ATTRIBUTE!\n");
+               printf("%s", line);
+            }
+
+            i = 0;
+            memset(line, 0, sizeof(line));
+         }
       }
-      printf("here is a line...\n%s", line);
-      printf("\n\n");
+*/
+
       fclose(fp);
    }
 
