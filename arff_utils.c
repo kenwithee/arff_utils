@@ -97,25 +97,38 @@ void process_unquoted_attribute(char *line)
    char *str1;
    char *tok;
    str1 = strstr(line, "{");
+   char *tokens[100] = {'\0'};
+   int counter = 0;
    
    printf("LINE: %s\n\n", line);
    printf("STR1: %s\n\n", str1);
 
    tok = strtok(str1, ",");
-   tok += 1;
-   printf("TOK: %s\n\n", tok);
+   tok += 1; /* move 1 ahead to move passed the { char */
+   tokens[counter++] = tok;
    while ( (tok = strtok(NULL, ",")) )
    {
-      /* walk through to find last } and change to 0. */
       char *tmp;
       tmp = tok;
+
+      /* walk through to find last } and change to 0. */
       while ( *tmp != '\n')
          tmp += 1;
       tmp = tmp - 1;
       *tmp = 0;
 
-      printf("TOK: %s\n\n", tok);
+      tokens[counter++] = tok;
    }
+   printf("\n\nhere they are\n\n");
+   int i = 0;
+   for ( i = 0; i < 10; i++ )
+   {
+      if ( tokens[i] != '\0' )
+         printf("tokens[%d] = %s\n", i, tokens[i]);
+      else
+         break;
+   }
+   printf("\n\n\n");
 }
 
 void process_quoted_attribute(char *line)
